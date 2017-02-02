@@ -1,0 +1,86 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        jcenter()
+    }
+    dependencies {
+        classpath 'de.richsource.gradle.plugins:gwt-gradle-plugin:0.6'
+        classpath 'com.android.tools.build:gradle:1.2.3'
+        classpath 'org.robovm:robovm-gradle-plugin:1.5.0'
+    }
+}
+
+allprojects {
+    apply plugin: "eclipse"
+    apply plugin: "idea"
+    apply plugin: "maven"
+
+    group = "uk.co.codeecho.oscar-the-ninja"
+    version = '1.0'
+    ext {
+        appName = 'oscar-the-ninja'
+        gdxVersion = '1.6.4'
+        gdxForgeVersion = '0.1.0-SNAPSHOT'
+        roboVMVersion = '1.5.0'
+        box2DLightsVersion = '1.4'
+        ashleyVersion = '1.6.4'
+        aiVersion = '1.5.0'
+    }
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+    }
+}
+
+project(":oscar-the-ninja-core") {
+    apply plugin: "java"
+
+
+    dependencies {
+        compile "uk.co.codeecho.gdx-forge:gdx-forge-core:$gdxForgeVersion"
+        compile "uk.co.codeecho.gdx-forge:gdx-forge-library:$gdxForgeVersion"
+        compile "uk.co.codeecho.gdx-forge:gdx-forge-tmx:$gdxForgeVersion"
+        compile "uk.co.codeecho.gdx-forge:gdx-forge-box2d:$gdxForgeVersion"
+        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+        compile "net.dermetfan.libgdx-utils:libgdx-utils:0.13.0"
+        compile "net.dermetfan.libgdx-utils:libgdx-utils-box2d:0.13.0"
+    }
+}
+
+project(":oscar-the-ninja-desktop") {
+    apply plugin: "java"
+
+
+    dependencies {
+        compile project(":oscar-the-ninja-core")
+        compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        compile "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
+    }
+}
+
+project(":oscar-the-ninja-html") {
+    apply plugin: "gwt"
+    apply plugin: "war"
+
+
+    dependencies {
+        compile "uk.co.codeecho.gdx-forge:gdx-forge-core:$gdxForgeVersion"
+        compile project(":oscar-the-ninja-core")
+        compile "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx:$gdxVersion:sources"
+        compile "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion:sources"
+        compile "com.badlogicgames.gdx:gdx-box2d-gwt:$gdxVersion:sources"
+        compile "net.dermetfan.libgdx-utils:libgdx-utils:0.13.0:sources"
+        compile "net.dermetfan.libgdx-utils:libgdx-utils-box2d:0.13.0:sources"
+    }
+}
+
+tasks.eclipse.doLast {
+    delete ".project"
+}

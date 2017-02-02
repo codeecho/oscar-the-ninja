@@ -1,0 +1,5 @@
+include 'core', 'desktop', 'html'
+
+project(":core").name = "oscar-the-ninja-core"
+project(":desktop").name = "oscar-the-ninja-desktop"
+project(":html").name = "oscar-the-ninja-html"
